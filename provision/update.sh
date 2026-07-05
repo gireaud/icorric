@@ -8,12 +8,16 @@ set -euo pipefail
 DOMAIN="${DOMAIN:-research.icor.cl}"
 WP_PATH="${WP_PATH:-/var/www/${DOMAIN}}"
 REPO_DIR="${REPO_DIR:-/opt/icorric}"
-BRANCH="${BRANCH:-main}"
 THEME_SLUG="icor-research"
 
+# Por defecto usa la rama que ya está desplegada en el droplet (la que clonó
+# el instalador), no una fija. Así el update funciona aunque el repo sea un
+# clon superficial de una sola rama. Puedes forzar otra con BRANCH=... .
+DEFAULT_BRANCH="$(git -C "$REPO_DIR" symbolic-ref --short -q HEAD || echo 'claude/icor-research-wordpress-setup-tp0dsx')"
+BRANCH="${BRANCH:-$DEFAULT_BRANCH}"
+
 git -C "$REPO_DIR" fetch origin "$BRANCH"
-git -C "$REPO_DIR" checkout "$BRANCH"
-git -C "$REPO_DIR" reset --hard "origin/${BRANCH}"
+git -C "$REPO_DIR" reset --hard FETCH_HEAD
 
 rsync -a --delete "${REPO_DIR}/wp-content/themes/${THEME_SLUG}/" "${WP_PATH}/wp-content/themes/${THEME_SLUG}/"
 chown -R www-data:www-data "${WP_PATH}/wp-content/themes/${THEME_SLUG}"
