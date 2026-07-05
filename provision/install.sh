@@ -191,7 +191,17 @@ else
 </VirtualHost>
 APACHE
   fi
+  # Permite el .htaccess de WordPress a nivel de Apache, de forma que siga
+  # activo aunque certbot genere luego un vhost HTTPS aparte (evita 404 en
+  # subrutas como /es/ o /proyectos/).
+  cat > /etc/apache2/conf-available/icor-research.conf <<APACHE
+<Directory ${WP_PATH}>
+    AllowOverride All
+    Require all granted
+</Directory>
+APACHE
   a2enmod rewrite >/dev/null
+  a2enconf icor-research >/dev/null
   a2ensite "${DOMAIN}.conf" >/dev/null
   apache2ctl configtest
   systemctl reload apache2
