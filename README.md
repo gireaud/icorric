@@ -100,6 +100,37 @@ listados usan el estilo del tema automáticamente. Los enlaces a estas
 secciones aparecen en el pie de página en cuanto publicas la primera entrada
 de cada una (para no mostrar secciones vacías en el lanzamiento).
 
+## Contenido bilingüe (EN/ES) con Polylang
+
+Para publicar **proyectos, publicaciones y noticias en inglés y español** se
+usa el plugin **Polylang** (gratuito). El tema ya está integrado: el selector
+EN/ES del sitio pasa a usar Polylang automáticamente cuando hay dos idiomas.
+
+**Instalación** (una sola vez, en la consola del droplet):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/gireaud/icorric/claude/icor-research-wordpress-setup-tp0dsx/provision/instalar-polylang.sh -o /tmp/polylang.sh && bash /tmp/polylang.sh
+```
+
+Luego, en el panel, completa el asistente de Polylang (añade English como
+idioma por defecto y Español) y actívalo para Entradas, Páginas, Proyectos,
+Publicaciones y Noticias. Los pasos exactos los imprime el propio script.
+
+**Cómo crear una entrada en los dos idiomas:**
+
+1. Crea el Proyecto/Publicación/Noticia normalmente (por ejemplo en inglés).
+   En la barra lateral del editor verás un panel **"Idiomas"**; elige el
+   idioma de esa versión.
+2. En la lista de entradas (o en el panel "Idiomas" del editor) aparece una
+   columna por idioma con un **"+"**. Haz clic en el "+" del otro idioma para
+   crear la versión traducida y escríbela.
+3. Polylang enlaza ambas versiones. El selector EN/ES del sitio lleva a la
+   traducción correcta; si una entrada no tiene traducción, el botón lleva a
+   la portada de ese idioma.
+
+Sugerencia: mantén el mismo *slug* base para ambas versiones (Polylang añade
+el prefijo `/es/` a la española), y sube una imagen destacada en cada una.
+
 ## Cómo publicar cambios de diseño/estructura
 
 Para **textos** usa el menú "Contenido de la web" (arriba). Para cambios de

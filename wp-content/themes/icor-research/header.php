@@ -28,9 +28,25 @@ $prefix  = $is_land ? '' : esc_url( $lang === 'es' ? home_url( '/es/' ) : home_u
       <a href="<?php echo $prefix; ?>#team"><?php echo esc_html( $strings['nav_team'] ); ?></a>
       <a href="<?php echo $prefix; ?>#collaboration"><?php echo esc_html( $strings['nav_collab'] ); ?></a>
       <a href="<?php echo $prefix; ?>#contact"><?php echo esc_html( $strings['nav_contact'] ); ?></a>
-      <a class="lang-switch" href="<?php echo esc_url( $lang === 'es' ? home_url( '/' ) : home_url( '/es/' ) ); ?>">
-        <?php echo $lang === 'es' ? 'EN' : 'ES'; ?>
-      </a>
+      <?php
+      // Selector de idioma: usa el de Polylang si hay 2+ idiomas configurados;
+      // si no, cae al toggle propio (/ ↔ /es/).
+      $switch = '';
+      if ( function_exists( 'pll_the_languages' ) ) {
+          $pll = pll_the_languages( array( 'raw' => 1, 'hide_if_no_translation' => 0 ) );
+          if ( is_array( $pll ) && count( $pll ) >= 2 ) {
+              foreach ( $pll as $l ) {
+                  if ( empty( $l['current_lang'] ) ) {
+                      $switch .= '<a class="lang-switch" href="' . esc_url( $l['url'] ) . '">' . esc_html( strtoupper( $l['slug'] ) ) . '</a>';
+                  }
+              }
+          }
+      }
+      if ( '' === $switch ) {
+          $switch = '<a class="lang-switch" href="' . esc_url( $lang === 'es' ? home_url( '/' ) : home_url( '/es/' ) ) . '">' . ( $lang === 'es' ? 'EN' : 'ES' ) . '</a>';
+      }
+      echo $switch; // Enlaces construidos con esc_url/esc_html arriba.
+      ?>
     </nav>
   </div>
 </header>

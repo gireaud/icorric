@@ -9,9 +9,19 @@ require_once get_template_directory() . '/inc/post-types.php';
 require_once get_template_directory() . '/inc/admin-content.php';
 
 /**
- * Idioma activo: 'es' en la página con plantilla ES, 'en' en el resto.
+ * Idioma activo del sitio.
+ *
+ * Si Polylang está activo, usa su idioma actual (así toda la landing y el
+ * contenido siguen el mismo idioma). Si no, cae al sistema propio: 'es' en la
+ * página con plantilla ES, 'en' en el resto.
  */
 function icor_current_lang() {
+	if ( function_exists( 'pll_current_language' ) ) {
+		$slug = pll_current_language( 'slug' );
+		if ( $slug ) {
+			return ( 0 === strpos( $slug, 'es' ) ) ? 'es' : 'en';
+		}
+	}
 	return is_page_template( 'page-templates/template-es.php' ) ? 'es' : 'en';
 }
 
