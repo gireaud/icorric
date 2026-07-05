@@ -78,6 +78,17 @@ apt-get install -y -qq "${PKGS[@]}" || apt-get install -y -qq "${PKGS[@]/php-ima
 PHP_VERSION="$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')"
 echo "PHP ${PHP_VERSION}"
 
+# El metapaquete php-mysql puede resolver a una versión de PHP distinta a la
+# CLI activa (p. ej. droplet con PHP 8.5). WP-CLI necesita la extensión mysqli
+# en la CLI que ejecuta, así que la instalamos y verificamos por versión exacta.
+if ! php -r 'exit(function_exists("mysqli_init") ? 0 : 1);' 2>/dev/null; then
+  log "Instalando extensión mysqli para PHP ${PHP_VERSION}"
+  apt-get install -y -qq "php${PHP_VERSION}-mysql" || true
+  systemctl restart "php${PHP_VERSION}-fpm" 2>/dev/null || true
+fi
+php -r 'exit(function_exists("mysqli_init") ? 0 : 1);' 2>/dev/null \
+  || die "La extensión mysqli de PHP ${PHP_VERSION} no está disponible. Instálala con: apt-get install php${PHP_VERSION}-mysql"
+
 # --------------------------------------------------------- base de datos
 log "Configurando base de datos MySQL/MariaDB"
 command -v mysql >/dev/null 2>&1 || die "No se encontró el cliente mysql. ¿Este droplet tiene MySQL/MariaDB instalado?"
