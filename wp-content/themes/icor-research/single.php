@@ -10,6 +10,11 @@ get_header();
       <article <?php post_class(); ?>>
         <h1><?php the_title(); ?></h1>
         <p style="color:var(--ink-600);font-size:0.9rem"><?php echo esc_html( get_the_date() ); ?></p>
+        <?php if ( has_post_thumbnail() ) : ?>
+          <div style="margin:24px 0;border-radius:14px;overflow:hidden">
+            <?php the_post_thumbnail( 'large', array( 'style' => 'width:100%;height:auto;display:block' ) ); ?>
+          </div>
+        <?php endif; ?>
         <div class="entry-content"><?php the_content(); ?></div>
       </article>
     <?php endwhile; ?>

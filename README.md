@@ -67,10 +67,46 @@ El script hace todo esto automáticamente:
 7. Instala y activa el tema `icor-research`, crea la página `/es/`,
    configura zona horaria (Santiago), permalinks y desactiva comentarios.
 
-## Cómo publicar cambios después
+## Editar el contenido tú mismo (sin código)
 
-1. Edita los archivos del tema en este repo (textos:
-   `inc/strings.php`; estilos: `style.css`) y haz *merge* a `main`.
+En el panel de WordPress aparece un menú **"Contenido de la web"**: desde ahí
+editas **todos los textos de la landing en inglés y español** (hero, about,
+áreas de investigación, equipo, colaboración, contacto, pie y meta descripción).
+
+- Cada campo tiene su columna EN y ES.
+- Si dejas un campo vacío, se usa el texto por defecto del manual.
+- En los campos "una por línea": cada línea es un elemento. Donde se indica
+  `|`, separa los datos con esa barra. Ejemplos:
+  - **Áreas de investigación**: `Título | Descripción`
+  - **Equipo**: `Nombre | Cargo | Bio`
+  - **Colaboración**: un ítem por línea.
+
+Los cambios se guardan en la base de datos y se ven al instante en la web. No
+hace falta tocar código ni redesplegar para editar textos.
+
+## Secciones de contenido: Proyectos, Publicaciones y Noticias
+
+El tema registra tres tipos de contenido, cada uno con su menú propio en el
+panel y editor de bloques (Gutenberg):
+
+| Sección | URL pública | Menú del panel |
+|---|---|---|
+| Proyectos | `/proyectos/` | Proyectos |
+| Publicaciones | `/publicaciones/` | Publicaciones |
+| Noticias | `/noticias/` | Noticias |
+
+Cada entrada admite título, contenido, **imagen destacada** y extracto. Los
+listados usan el estilo del tema automáticamente. Los enlaces a estas
+secciones aparecen en el pie de página en cuanto publicas la primera entrada
+de cada una (para no mostrar secciones vacías en el lanzamiento).
+
+## Cómo publicar cambios de diseño/estructura
+
+Para **textos** usa el menú "Contenido de la web" (arriba). Para cambios de
+**diseño o estructura** (estilos, plantillas):
+
+1. Edita los archivos del tema en este repo (estilos: `style.css`;
+   textos por defecto: `inc/strings.php`) y haz *merge* a `main`.
 2. En la consola del droplet:
 
    ```bash

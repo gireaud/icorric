@@ -189,5 +189,61 @@ function icor_strings( $lang = 'en' ) {
 		'footer_contact' => 'Contacto',
 	);
 
-	return 'es' === $lang ? $es : $en;
+	$defaults = 'es' === $lang ? $es : $en;
+
+	// Los textos guardados en el panel (Contenido de la web) sobrescriben los
+	// valores por defecto. Un campo vacío conserva el texto por defecto.
+	$saved = get_option( 'es' === $lang ? 'icor_content_es' : 'icor_content_en', array() );
+
+	return icor_apply_overrides( $defaults, $saved );
+}
+
+/**
+ * Sobrepone los textos editados en el panel sobre los valores por defecto.
+ */
+function icor_apply_overrides( $defaults, $saved ) {
+	if ( empty( $saved ) || ! is_array( $saved ) ) {
+		return $defaults;
+	}
+	$out = $defaults;
+	foreach ( $saved as $key => $val ) {
+		if ( '' === trim( (string) $val ) ) {
+			continue; // vacío = usar el texto por defecto
+		}
+		if ( 'research_areas' === $key ) {
+			$out[ $key ] = icor_parse_rows( $val, 2 );
+		} elseif ( 'team' === $key ) {
+			$out[ $key ] = icor_parse_rows( $val, 3 );
+		} elseif ( 'collab_items' === $key || 'form_type_opts' === $key ) {
+			$out[ $key ] = icor_parse_list( $val );
+		} else {
+			$out[ $key ] = $val;
+		}
+	}
+	return $out;
+}
+
+/** Convierte un textarea (un ítem por línea) en un array plano. */
+function icor_parse_list( $text ) {
+	$lines = preg_split( '/\r\n|\r|\n/', (string) $text );
+	$lines = array_map( 'trim', $lines );
+	return array_values( array_filter( $lines, 'strlen' ) );
+}
+
+/**
+ * Convierte un textarea (una fila por línea, campos separados por " | ")
+ * en un array de arrays con $cols columnas.
+ */
+function icor_parse_rows( $text, $cols ) {
+	$rows = array();
+	foreach ( preg_split( '/\r\n|\r|\n/', (string) $text ) as $line ) {
+		$line = trim( $line );
+		if ( '' === $line ) {
+			continue;
+		}
+		$parts = array_map( 'trim', explode( '|', $line ) );
+		$parts = array_pad( array_slice( $parts, 0, $cols ), $cols, '' );
+		$rows[] = $parts;
+	}
+	return $rows;
 }

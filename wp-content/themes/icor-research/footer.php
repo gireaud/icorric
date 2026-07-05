@@ -18,6 +18,22 @@ $email    = icor_contact_email();
         <a href="<?php echo esc_url( $linkedin ); ?>" target="_blank" rel="noopener">LinkedIn</a>
       <?php endif; ?>
     </div>
+    <?php
+    // Enlaces a las secciones de fase 2 (aparecen solo cuando tienen contenido).
+    $cpt_labels = array( 'proyecto' => 'Proyectos', 'publicacion' => 'Publicaciones', 'noticia' => 'Noticias' );
+    $cpt_links  = array();
+    foreach ( $cpt_labels as $pt => $label ) {
+        $counts = wp_count_posts( $pt );
+        if ( $counts && (int) $counts->publish > 0 ) {
+            $cpt_links[] = '<a href="' . esc_url( get_post_type_archive_link( $pt ) ) . '">' . esc_html( $label ) . '</a>';
+        }
+    }
+    if ( $cpt_links ) : ?>
+      <div>
+        <strong style="color:#fff"><?php echo esc_html( 'es' === $lang ? 'Secciones' : 'Sections' ); ?></strong><br>
+        <?php echo implode( '<br>', $cpt_links ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+      </div>
+    <?php endif; ?>
     <div style="align-self:flex-end">
       &copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> ICOR Research &amp; Innovation Center
     </div>

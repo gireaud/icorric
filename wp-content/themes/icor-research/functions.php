@@ -5,6 +5,8 @@
 
 require_once get_template_directory() . '/inc/contact-form.php';
 require_once get_template_directory() . '/inc/strings.php';
+require_once get_template_directory() . '/inc/post-types.php';
+require_once get_template_directory() . '/inc/admin-content.php';
 
 /**
  * Idioma activo: 'es' en la página con plantilla ES, 'en' en el resto.
