@@ -82,6 +82,22 @@ echo "PHP ${PHP_VERSION}"
 log "Configurando base de datos MySQL/MariaDB"
 command -v mysql >/dev/null 2>&1 || die "No se encontró el cliente mysql. ¿Este droplet tiene MySQL/MariaDB instalado?"
 
+# Cómo autenticarse como root de MySQL: socket (por defecto en Ubuntu),
+# archivo de mantenimiento de Debian, o credenciales de imágenes DO.
+MYSQL_ROOT=(mysql -u root)
+if ! "${MYSQL_ROOT[@]}" -e 'SELECT 1' >/dev/null 2>&1; then
+  if mysql --defaults-file=/etc/mysql/debian.cnf -e 'SELECT 1' >/dev/null 2>&1; then
+    MYSQL_ROOT=(mysql --defaults-file=/etc/mysql/debian.cnf)
+  elif [ -f /root/.digitalocean_password ] && source /root/.digitalocean_password 2>/dev/null \
+      && mysql -u root -p"${root_mysql_pass:-}" -e 'SELECT 1' >/dev/null 2>&1; then
+    MYSQL_ROOT=(mysql -u root -p"${root_mysql_pass}")
+  elif [ -n "${MYSQL_ROOT_PASSWORD:-}" ] && mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e 'SELECT 1' >/dev/null 2>&1; then
+    MYSQL_ROOT=(mysql -u root -p"${MYSQL_ROOT_PASSWORD}")
+  else
+    die "No pude autenticarme como root de MySQL. Reintenta con: MYSQL_ROOT_PASSWORD='tu_clave' bash /tmp/icor-install.sh"
+  fi
+fi
+
 DB_PASS=""
 if [ -f "${WP_PATH}/wp-config.php" ]; then
   DB_PASS="$(grep -oP "define\(\s*'DB_PASSWORD',\s*'\K[^']+" "${WP_PATH}/wp-config.php" || true)"
@@ -90,7 +106,7 @@ if [ -z "$DB_PASS" ]; then
   DB_PASS="$(openssl rand -base64 24 | tr -d '/+=' | cut -c1-24)"
 fi
 
-mysql -u root <<SQL
+"${MYSQL_ROOT[@]}" <<SQL
 CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
 ALTER USER '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
@@ -168,6 +184,12 @@ APACHE
   a2ensite "${DOMAIN}.conf" >/dev/null
   apache2ctl configtest
   systemctl reload apache2
+fi
+
+# ------------------------------------------------------------- firewall
+if command -v ufw >/dev/null 2>&1 && ufw status 2>/dev/null | grep -q 'Status: active'; then
+  log "UFW activo: asegurando puertos 80/443"
+  ufw allow 'Nginx Full' >/dev/null 2>&1 || ufw allow 'Apache Full' >/dev/null 2>&1 || { ufw allow 80/tcp >/dev/null; ufw allow 443/tcp >/dev/null; }
 fi
 
 # -------------------------------------------------------- certificado SSL
