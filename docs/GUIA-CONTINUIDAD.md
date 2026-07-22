@@ -69,7 +69,7 @@ icorric/
 
 ---
 
-## 2. Accesos que debes pedir (a Jesús / Ignacio)
+## 2. Accesos que debes pedir (a Jesús)
 
 Antes de empezar, pide:
 
