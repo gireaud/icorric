@@ -7,7 +7,7 @@
 # generado por certbot no permite el .htaccess de WordPress (AllowOverride).
 #
 # USO (como root en el droplet):
-#   curl -fsSL https://raw.githubusercontent.com/gireaud/icorric/claude/icor-research-wordpress-setup-tp0dsx/provision/reparar-permalinks.sh -o /tmp/reparar.sh && bash /tmp/reparar.sh
+#   curl -fsSL https://raw.githubusercontent.com/gireaud/icorric/main/provision/reparar-permalinks.sh -o /tmp/reparar.sh && bash /tmp/reparar.sh
 #
 set -euo pipefail
 

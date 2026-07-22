@@ -5,7 +5,7 @@
 # panel (es guiado y sencillo); este script solo deja el plugin listo.
 #
 # USO (como root en el droplet):
-#   curl -fsSL https://raw.githubusercontent.com/gireaud/icorric/claude/icor-research-wordpress-setup-tp0dsx/provision/instalar-polylang.sh -o /tmp/polylang.sh && bash /tmp/polylang.sh
+#   curl -fsSL https://raw.githubusercontent.com/gireaud/icorric/main/provision/instalar-polylang.sh -o /tmp/polylang.sh && bash /tmp/polylang.sh
 #
 set -euo pipefail
 

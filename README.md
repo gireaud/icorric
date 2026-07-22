@@ -109,7 +109,7 @@ EN/ES del sitio pasa a usar Polylang automáticamente cuando hay dos idiomas.
 **Instalación** (una sola vez, en la consola del droplet):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/gireaud/icorric/claude/icor-research-wordpress-setup-tp0dsx/provision/instalar-polylang.sh -o /tmp/polylang.sh && bash /tmp/polylang.sh
+curl -fsSL https://raw.githubusercontent.com/gireaud/icorric/main/provision/instalar-polylang.sh -o /tmp/polylang.sh && bash /tmp/polylang.sh
 ```
 
 Luego, en el panel, completa el asistente de Polylang (añade English como
